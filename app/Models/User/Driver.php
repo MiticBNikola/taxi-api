@@ -6,6 +6,8 @@ use App\Models\Steer;
 use App\Models\Vehicle\Vehicle;
 use App\Traits\HasRides;
 use App\Traits\Numberable;
+use Database\Factories\DriverFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Driver extends User
@@ -21,7 +23,7 @@ class Driver extends User
      */
     protected $fillable = [
         'driving_license_category',
-        'drivers_license_number',
+        'driving_license_number',
     ];
 
     protected function rideForeignKey(): string
@@ -36,5 +38,13 @@ class Driver extends User
             ->as('steer')
             ->withPivot('date_from', 'date_to')
             ->withTimestamps();
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return DriverFactory::new();
     }
 }

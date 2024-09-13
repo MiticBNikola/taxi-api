@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\SteerFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -22,4 +24,12 @@ class Steer extends Pivot
         'date_from' => 'date',
         'date_to' => 'date',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return SteerFactory::new();
+    }
 }
