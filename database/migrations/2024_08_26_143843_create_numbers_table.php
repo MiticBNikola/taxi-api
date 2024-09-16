@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('numbers', function (Blueprint $table) {
             $table->id();
-            $table->integer('number')->unique();
+            $table->string('number')->unique();
             $table->morphs('numberable');
             $table->timestamps();
         });
