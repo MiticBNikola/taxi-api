@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RideController;
+use App\Http\Controllers\User\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/ride', [RideController::class, 'store']);
+Route::get('/ride', [RideController::class, 'index']);
+Route::post('/ride', [RideController::class, 'makeRequest']);
+Route::put('/ride/{ride}/accept', [RideController::class, 'acceptRide']);
+Route::put('/ride/{ride}/start', [RideController::class, 'startRide']);
+Route::put('/ride/{ride}/end', [RideController::class, 'endRide']);
+Route::delete('/ride/{ride}/cancel', [RideController::class, 'cancelRide']);
+
+Route::get('/customer', [CustomerController::class, 'index']);
+Route::get('/customer/{customer}', [CustomerController::class, 'show']);
+Route::put('/customer/{customer}', [CustomerController::class, 'update']);
+Route::delete('/customer/{customer}', [CustomerController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
