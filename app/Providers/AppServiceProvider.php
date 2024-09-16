@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\CustomerService;
+use App\Services\CustomerServiceInterface;
+use App\Services\RideService;
+use App\Services\RideServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(RideServiceInterface::class, RideService::class);
+        $this->app->singleton(CustomerServiceInterface::class, CustomerService::class);
     }
 
     /**
