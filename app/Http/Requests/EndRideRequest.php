@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRideRequest extends FormRequest
+class EndRideRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,7 @@ class StoreRideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_location' => ['required', 'string'],
-            'end_location' => ['sometimes', 'string'],
-            'customer_id' => ['sometimes', 'numeric'],
-            'request_time' => ['required', 'string'],
+            'end_time' => ['required', 'string'],
         ];
     }
 }
