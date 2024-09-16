@@ -9,6 +9,6 @@ trait Numberable
 {
     public function numbers() : MorphMany
     {
-        return $this->morphMany(Number::class, 'numberable', static::class);
+        return $this->morphMany(Number::class, 'numberable');
     }
 }
