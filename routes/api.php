@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\User\CustomerController;
+use App\Http\Controllers\User\DriverController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,12 @@ Route::get('/customer', [CustomerController::class, 'index']);
 Route::get('/customer/{customer}', [CustomerController::class, 'show']);
 Route::put('/customer/{customer}', [CustomerController::class, 'update']);
 Route::delete('/customer/{customer}', [CustomerController::class, 'destroy']);
+Route::resource('driver', DriverController::class)->only(['index', 'update', 'destroy']);
+Route::prefix('driver')->group(function () {
+    Route::get('/current-shift', [DriverController::class, 'currentShift']);
+    Route::get('/available', [DriverController::class, 'available']);
+    Route::get('/in-drive', [DriverController::class, 'inDrive']);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

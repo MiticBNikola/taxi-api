@@ -3,64 +3,56 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateDriverRequest;
 use App\Models\User\Driver;
+use App\Services\DriverServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DriverController extends Controller
 {
+    private DriverServiceInterface $driverService;
+
+    public function __construct(DriverServiceInterface $driverService) {
+        $this->driverService = $driverService;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        return response()->json($this->driverService->index());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function currentShift(): JsonResponse
     {
-        //
+        return response()->json($this->driverService->currentShift());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function available(): JsonResponse
     {
-        //
+        return response()->json($this->driverService->available());
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Driver $driver)
+    public function inDrive(): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Driver $driver)
-    {
-        //
+        return response()->json($this->driverService->inDrive());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Driver $driver)
+    public function update(UpdateDriverRequest $request, Driver $driver): JsonResponse
     {
-        //
+        return response()->json($this->driverService->update($request, $driver));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Driver $driver)
+    public function destroy(Driver $driver): JsonResponse
     {
-        //
+        return response()->json($this->driverService->destroy($driver));
     }
 }

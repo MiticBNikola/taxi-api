@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('driving_license_category')->nullable();
-            $table->string('driving_license_number')->unique()->nullable();
+            $table->string('driving_license_category');
+            $table->string('driving_license_number', 6)->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_active');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

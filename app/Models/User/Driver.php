@@ -9,22 +9,26 @@ use App\Traits\Numberable;
 use Database\Factories\DriverFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Driver extends User
 {
-    use Numberable, HasRides;
+    use Numberable, HasRides, SoftDeletes;
 
     protected $table = 'drivers';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'driving_license_category',
-        'driving_license_number',
-    ];
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->mergeFillable([
+            'driving_license_category',
+            'driving_license_number',
+        ]);
+        $this->mergeCasts([
+            'is_active' => 'boolean',
+        ]);
+    }
 
     protected function rideForeignKey(): string
     {
@@ -33,7 +37,7 @@ class Driver extends User
 
     public function vehicles(): BelongsToMany
     {
-        return  $this->belongsToMany(Vehicle::class)
+        return $this->belongsToMany(Vehicle::class)
             ->using(Steer::class)
             ->as('steer')
             ->withPivot('date_from', 'date_to')

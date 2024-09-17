@@ -36,7 +36,8 @@ class DriverFactory extends Factory
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'driving_license_category' => 'B',
-            'driving_license_number' => $this->faker->unique()->numberBetween(000001, 999999),
+            'driving_license_number' => $this->faker->unique()->numberBetween(100000, 999999),
+            'is_active' => !!rand(0, 1),
         ];
     }
 }

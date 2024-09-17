@@ -18,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        Login::class => [
+            UpdateDriverActivity::class
+        ],
+        Logout::class => [
+            UpdateDriverActivity::class
+        ]
     ];
 
     /**
