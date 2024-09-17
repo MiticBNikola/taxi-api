@@ -27,6 +27,14 @@ Route::prefix('driver')->group(function () {
     Route::get('/available', [DriverController::class, 'available']);
     Route::get('/in-drive', [DriverController::class, 'inDrive']);
 });
+Route::prefix('ride')->group(function () {
+    Route::get('', [RideController::class, 'index']);
+    Route::post('', [RideController::class, 'makeRequest']);
+    Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
+    Route::put('/{ride}/start', [RideController::class, 'startRide']);
+    Route::put('/{ride}/end', [RideController::class, 'endRide']);
+    Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
