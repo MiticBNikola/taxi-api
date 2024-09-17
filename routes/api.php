@@ -17,17 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/ride', [RideController::class, 'index']);
-Route::post('/ride', [RideController::class, 'makeRequest']);
-Route::put('/ride/{ride}/accept', [RideController::class, 'acceptRide']);
-Route::put('/ride/{ride}/start', [RideController::class, 'startRide']);
-Route::put('/ride/{ride}/end', [RideController::class, 'endRide']);
-Route::delete('/ride/{ride}/cancel', [RideController::class, 'cancelRide']);
-
-Route::get('/customer', [CustomerController::class, 'index']);
-Route::get('/customer/{customer}', [CustomerController::class, 'show']);
-Route::put('/customer/{customer}', [CustomerController::class, 'update']);
-Route::delete('/customer/{customer}', [CustomerController::class, 'destroy']);
+Route::resource('customer', CustomerController::class)->only(['index', 'show', 'update', 'destroy']);
+Route::prefix('customer')->group(function () {
+    Route::get('/{customer}/ride-status', [CustomerController::class, 'status']);
+});
 Route::resource('driver', DriverController::class)->only(['index', 'update', 'destroy']);
 Route::prefix('driver')->group(function () {
     Route::get('/current-shift', [DriverController::class, 'currentShift']);

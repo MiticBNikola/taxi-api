@@ -14,6 +14,30 @@ class CustomerService implements CustomerServiceInterface
         return Customer::all()->load('numbers');
     }
 
+    public function rideStatus(Customer $customer): \Illuminate\Support\Collection
+    {
+        $status = collect(['text' => 'No ride in progress', 'value' => 0]);
+        $lastRide = $customer->rides->last();
+        if ($lastRide) {
+            if (!$lastRide->driver_id) {
+                $status->put('text', 'Finding free vehicle');
+                $status->put('value', 1);
+                return $status;
+            }
+            if (!$lastRide->start_time) {
+                $status->put('text', 'Vehicle is coming');
+                $status->put('value', 2);
+                return $status;
+            }
+            if (!$lastRide->end_time) {
+                $status->put('text', 'Ride in progress');
+                $status->put('value', 3);
+                return $status;
+            }
+        }
+        return $status;
+    }
+
     public function update(UpdateCustomerRequest $request, Customer $customer): Customer
     {
         $customer->update($request->all());

@@ -34,6 +34,11 @@ class CustomerController extends Controller
         return response()->json($customer->load('numbers'));
     }
 
+    public function status(Customer $customer): JsonResponse
+    {
+        return response()->json($this->customerService->rideStatus($customer));
+    }
+
     /**
      * Update the specified resource in storage.
      */
