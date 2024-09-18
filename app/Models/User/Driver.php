@@ -42,7 +42,7 @@ class Driver extends User
         return $this->belongsToMany(Vehicle::class, 'steers')
             ->using(Steer::class)
             ->as('steer')
-            ->withPivot('date_from', 'date_to')
+            ->withPivot('id', 'date_from', 'date_to')
             ->withTimestamps();
     }
 
