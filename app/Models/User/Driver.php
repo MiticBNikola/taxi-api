@@ -37,7 +37,7 @@ class Driver extends User
 
     public function vehicles(): BelongsToMany
     {
-        return $this->belongsToMany(Vehicle::class)
+        return $this->belongsToMany(Vehicle::class, 'steers')
             ->using(Steer::class)
             ->as('steer')
             ->withPivot('date_from', 'date_to')
