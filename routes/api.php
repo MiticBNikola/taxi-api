@@ -35,6 +35,10 @@ Route::prefix('ride')->group(function () {
     Route::put('/{ride}/end', [RideController::class, 'endRide']);
     Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
 });
+Route::prefix('steer')->group(function () {
+    Route::post('/assign', [SteerController::class, 'assignVehicle']);
+    Route::put('/{steer}/release', [SteerController::class, 'releaseVehicle']);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
