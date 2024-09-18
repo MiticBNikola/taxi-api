@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RideController;
+use App\Http\Controllers\SteerController;
 use App\Http\Controllers\User\CustomerController;
 use App\Http\Controllers\User\DriverController;
 use Illuminate\Http\Request;
@@ -34,6 +35,9 @@ Route::prefix('ride')->group(function () {
     Route::put('/{ride}/start', [RideController::class, 'startRide']);
     Route::put('/{ride}/end', [RideController::class, 'endRide']);
     Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
+});
+Route::prefix('vehicle')->group(function () {
+    Route::get('/available', [VehicleController::class, 'available']);
 });
 Route::prefix('steer')->group(function () {
     Route::post('/assign', [SteerController::class, 'assignVehicle']);
