@@ -17,7 +17,7 @@ class Driver extends User
 
     protected $table = 'drivers';
 
-    protected $appends = ['has_vehicle'];
+    protected $appends = ['number_of_rides', 'has_vehicle'];
 
     public function __construct(array $attributes = [])
     {

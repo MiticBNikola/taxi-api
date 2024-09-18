@@ -15,6 +15,8 @@ class Customer extends User
 
     protected $table = 'customers';
 
+    protected $appends = ['number_of_rides'];
+
     public function rides(): HasMany
     {
         return $this->hasMany(Ride::class);

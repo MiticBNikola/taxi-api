@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasRides
 {
+    public function getNumberOfRidesAttribute(): int
+    {
+        return $this->rides()->count();
+    }
+
     public function rides() : HasMany
     {
         return $this->hasMany(Ride::class, $this->rideForeignKey());
