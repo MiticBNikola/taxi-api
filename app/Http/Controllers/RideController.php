@@ -9,6 +9,7 @@ use App\Http\Requests\StoreRideRequest;
 use App\Models\Ride;
 use App\Services\RideServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class RideController extends Controller
 {
@@ -51,8 +52,21 @@ class RideController extends Controller
         return response()->json($this->rideService->update($request, $ride));
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function cancelRide(Ride $ride): JsonResponse
     {
+        if ($ride->start_time) {
+            throw ValidationException::withMessages([
+                'error' => 'Ride in progress.'
+            ]);
+        }
+        if ($ride->end_time) {
+            throw ValidationException::withMessages([
+                'error' => 'Ride ended.'
+            ]);
+        }
         return response()->json($this->rideService->destroy($ride));
     }
 }
