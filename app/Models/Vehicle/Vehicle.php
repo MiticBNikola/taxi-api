@@ -22,6 +22,8 @@ class Vehicle extends Model
         'model_year',
     ];
 
+    protected $appends = ['has_driver'];
+
     protected $table = 'vehicles';
 
     public function drivers(): BelongsToMany
@@ -29,8 +31,13 @@ class Vehicle extends Model
         return $this->belongsToMany(Driver::class, 'steers')
             ->using(Steer::class)
             ->as('steer')
-            ->withPivot('date_from', 'date_to')
+            ->withPivot('id', 'date_from', 'date_to')
             ->withTimestamps();
+    }
+
+    public function getHasDriverAttribute(): bool
+    {
+        return $this->drivers()->wherePivotNull('date_to')->exists();
     }
 
     protected static function newFactory(): Factory
