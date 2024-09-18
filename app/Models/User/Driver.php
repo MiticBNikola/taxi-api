@@ -17,6 +17,8 @@ class Driver extends User
 
     protected $table = 'drivers';
 
+    protected $appends = ['has_vehicle'];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -42,6 +44,11 @@ class Driver extends User
             ->as('steer')
             ->withPivot('date_from', 'date_to')
             ->withTimestamps();
+    }
+
+    public function getHasVehicleAttribute(): bool
+    {
+        return $this->vehicles()->wherePivotNull('date_to')->exists();
     }
 
     /**
