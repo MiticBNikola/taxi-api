@@ -23,7 +23,7 @@ Route::resource('customer', CustomerController::class)->only(['index', 'show', '
 Route::prefix('customer')->group(function () {
     Route::get('/{customer}/ride-status', [CustomerController::class, 'status']);
 });
-Route::resource('driver', DriverController::class)->only(['index', 'update', 'destroy']);
+Route::resource('driver', DriverController::class)->only(['index', 'show', 'update', 'destroy']);
 Route::prefix('driver')->group(function () {
     Route::get('/current-shift', [DriverController::class, 'currentShift']);
     Route::get('/available', [DriverController::class, 'available']);
