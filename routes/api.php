@@ -4,6 +4,7 @@ use App\Http\Controllers\RideController;
 use App\Http\Controllers\SteerController;
 use App\Http\Controllers\User\CustomerController;
 use App\Http\Controllers\User\DriverController;
+use App\Http\Controllers\Vehicle\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
