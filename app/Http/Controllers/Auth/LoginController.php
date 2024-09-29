@@ -37,17 +37,6 @@ class LoginController extends Controller
     protected string $redirectTo = '/home';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
-    }
-
-    /**
      * Handle a login request to the application.
      *
      * @param Request $request
@@ -166,5 +155,35 @@ class LoginController extends Controller
         }
 
         return response()->json(NULL, 401);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param Request $request
+     * @return RedirectResponse|JsonResponse
+     */
+    public function logout(Request $request): JsonResponse|RedirectResponse
+    {
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        $type = $request->get('type', 'web');
+        if (auth()->guard($type)->check()) {
+            auth()->guard($type)->user()->tokens()->delete();
+        }
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/');
     }
 }
