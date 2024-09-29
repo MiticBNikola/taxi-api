@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\SteerController;
 use App\Http\Controllers\User\CustomerController;
 use App\Http\Controllers\User\DriverController;
 use App\Http\Controllers\Vehicle\VehicleController;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,32 +20,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('customer', CustomerController::class)->only(['index', 'show', 'update', 'destroy']);
-Route::prefix('customer')->group(function () {
-    Route::get('/{customer}/ride-status', [CustomerController::class, 'status']);
-});
-Route::resource('driver', DriverController::class)->only(['index', 'show', 'update', 'destroy']);
-Route::prefix('driver')->group(function () {
-    Route::get('/current-shift', [DriverController::class, 'currentShift']);
-    Route::get('/available', [DriverController::class, 'available']);
-    Route::get('/in-drive', [DriverController::class, 'inDrive']);
-});
-Route::prefix('ride')->group(function () {
-    Route::get('', [RideController::class, 'index']);
-    Route::post('', [RideController::class, 'makeRequest']);
-    Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
-    Route::put('/{ride}/start', [RideController::class, 'startRide']);
-    Route::put('/{ride}/end', [RideController::class, 'endRide']);
-    Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
-});
-Route::prefix('vehicle')->group(function () {
-    Route::get('/available', [VehicleController::class, 'available']);
-});
-Route::prefix('steer')->group(function () {
-    Route::post('/assign', [SteerController::class, 'assignVehicle']);
-    Route::put('/{steer}/release', [SteerController::class, 'releaseVehicle']);
-});
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('auth/check', [LoginController::class, 'authCheck']);
+Auth::routes();
+Route::middleware( 'auth:sanctum')->group(function () {
+    Route::resource('customer', CustomerController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::prefix('customer')->group(function () {
+        Route::get('/{customer}/ride-status', [CustomerController::class, 'status']);
+    });
+    Route::resource('driver', DriverController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::prefix('driver')->group(function () {
+        Route::get('/current-shift', [DriverController::class, 'currentShift']);
+        Route::get('/available', [DriverController::class, 'available']);
+        Route::get('/in-drive', [DriverController::class, 'inDrive']);
+    });
+    Route::prefix('ride')->group(function () {
+        Route::get('', [RideController::class, 'index']);
+        Route::post('', [RideController::class, 'makeRequest']);
+        Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
+        Route::put('/{ride}/start', [RideController::class, 'startRide']);
+        Route::put('/{ride}/end', [RideController::class, 'endRide']);
+        Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
+    });
+    Route::prefix('vehicle')->group(function () {
+        Route::get('/available', [VehicleController::class, 'available']);
+    });
+    Route::prefix('steer')->group(function () {
+        Route::post('/assign', [SteerController::class, 'assignVehicle']);
+        Route::put('/{steer}/release', [SteerController::class, 'releaseVehicle']);
+    });
 });
