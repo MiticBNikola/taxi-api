@@ -25,9 +25,10 @@ class UpdateCustomerRequest extends FormRequest
         return [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
+            'email' => ['required', 'email'],
             'numbers' => ['sometimes', 'array'],
             'numbers.*.id' => ['sometimes', 'numeric'],
-            'numbers.*.number' => ['required', 'numeric'],
+            'numbers.*.number' => ['required', 'regex:/^\+[0-9]*$/'],
         ];
     }
 }
