@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AcceptRideRequest;
 use App\Http\Requests\EndRideRequest;
+use App\Http\Requests\IndexRideRequest;
 use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
 use App\Models\Ride;
@@ -24,9 +25,9 @@ class RideController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(IndexRideRequest $request): JsonResponse
     {
-        return response()->json($this->rideService->index());
+        return response()->json($this->rideService->index($request));
     }
 
     /**
