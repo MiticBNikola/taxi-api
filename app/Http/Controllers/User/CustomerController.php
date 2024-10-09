@@ -31,7 +31,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer): JsonResponse
     {
-        return response()->json($customer->load('numbers'));
+        return response()->json($customer->load('numbers', 'rides'));
     }
 
     public function status(Customer $customer): JsonResponse
