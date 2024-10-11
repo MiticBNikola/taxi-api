@@ -7,9 +7,9 @@ use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
 use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
+use App\Http\Requests\UpdateEndOfRideRequest;
 use App\Models\Ride;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 interface RideServiceInterface
 {
@@ -17,7 +17,17 @@ interface RideServiceInterface
 
     public function store(StoreRideRequest $request): Ride;
 
-    public function update(AcceptRideRequest|StartRideRequest|EndRideRequest $request, Ride $ride): Ride;
+    public function customerUpdateEnd(UpdateEndOfRideRequest $request, Ride $ride): Ride;
+
+    public function updateEnd(UpdateEndOfRideRequest $request, Ride $ride): Ride;
+
+    public function acceptRide(AcceptRideRequest $request, Ride $ride): Ride;
+
+    public function startRide(StartRideRequest $request, Ride $ride): Ride;
+
+    public function endRide(EndRideRequest $request, Ride $ride): Ride;
+
+    public function update(AcceptRideRequest|UpdateEndOfRideRequest|StartRideRequest|EndRideRequest $request, Ride $ride): Ride;
 
     public function destroy(Ride $ride): bool;
 }

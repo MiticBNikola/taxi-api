@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StartRideRequest extends FormRequest
+class UpdateEndOfRideRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,7 @@ class StartRideRequest extends FormRequest
     public function rules(): array
     {
         return [
-//            'end_location' => ['required', 'string'],
-            'start_time' => ['required', 'string'],
+            'end_location' => ['required', 'string'],
         ];
     }
 }

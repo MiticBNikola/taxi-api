@@ -7,6 +7,7 @@ use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
 use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
+use App\Http\Requests\UpdateEndOfRideRequest;
 use App\Models\Ride;
 use App\Services\RideServiceInterface;
 use Illuminate\Http\JsonResponse;
@@ -38,19 +39,29 @@ class RideController extends Controller
         return response()->json($this->rideService->store($request));
     }
 
+    public function customerUpdateEnd(UpdateEndOfRideRequest $request, Ride $ride): JsonResponse
+    {
+        return response()->json($this->rideService->customerUpdateEnd($request, $ride));
+    }
+
+    public function updateEnd(UpdateEndOfRideRequest $request, Ride $ride): JsonResponse
+    {
+        return response()->json($this->rideService->updateEnd($request, $ride));
+    }
+
     public function acceptRide(AcceptRideRequest $request, Ride $ride): JsonResponse
     {
-        return response()->json($this->rideService->update($request, $ride));
+        return response()->json($this->rideService->acceptRide($request, $ride));
     }
 
     public function startRide(StartRideRequest $request, Ride $ride): JsonResponse
     {
-        return response()->json($this->rideService->update($request, $ride));
+        return response()->json($this->rideService->startRide($request, $ride));
     }
 
     public function endRide(EndRideRequest $request, Ride $ride): JsonResponse
     {
-        return response()->json($this->rideService->update($request, $ride));
+        return response()->json($this->rideService->endRide($request, $ride));
     }
 
     /**
@@ -68,6 +79,6 @@ class RideController extends Controller
                 'error' => 'Ride ended.'
             ]);
         }
-        return response()->json($this->rideService->destroy($ride));
+        return response()->json($this->rideService->cancelRide($ride));
     }
 }
