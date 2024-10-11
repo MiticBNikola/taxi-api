@@ -69,14 +69,14 @@ class RideController extends Controller
      */
     public function cancelRide(Ride $ride): JsonResponse
     {
-        if ($ride->start_time) {
-            throw ValidationException::withMessages([
-                'error' => 'Ride in progress.'
-            ]);
-        }
         if ($ride->end_time) {
             throw ValidationException::withMessages([
                 'error' => 'Ride ended.'
+            ]);
+        }
+        if ($ride->start_time) {
+            throw ValidationException::withMessages([
+                'error' => 'Ride in progress.'
             ]);
         }
         return response()->json($this->rideService->cancelRide($ride));
