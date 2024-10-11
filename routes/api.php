@@ -25,6 +25,7 @@ Auth::routes();
 Route::prefix('ride')->group(function () {
     Route::post('', [RideController::class, 'makeRequest']);
     Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
+    Route::put('/{ride}/customer-update-end', [RideController::class, 'customerUpdateEnd']);
 });
 Route::middleware( 'auth:sanctum')->group(function () {
     Route::resource('customer', CustomerController::class)->only(['index', 'show', 'update', 'destroy']);
@@ -39,6 +40,7 @@ Route::middleware( 'auth:sanctum')->group(function () {
     });
     Route::prefix('ride')->group(function () {
         Route::get('', [RideController::class, 'index']);
+        Route::put('/{ride}/update-end', [RideController::class, 'updateEnd']);
         Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
         Route::put('/{ride}/start', [RideController::class, 'startRide']);
         Route::put('/{ride}/end', [RideController::class, 'endRide']);
