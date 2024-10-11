@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\AcceptRideRequest;
+use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
 use App\Http\Requests\StartRideRequest;
@@ -22,6 +23,8 @@ interface RideServiceInterface
     public function updateEnd(UpdateEndOfRideRequest $request, Ride $ride): Ride;
 
     public function acceptRide(AcceptRideRequest $request, Ride $ride): Ride;
+
+    public function dispatchDriverPosition(DriverPositionInfoRequest $request, string $driverId, Ride $ride): bool;
 
     public function startRide(StartRideRequest $request, Ride $ride): Ride;
 

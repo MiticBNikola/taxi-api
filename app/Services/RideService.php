@@ -7,9 +7,11 @@ use App\Events\CustomerChangedEnd;
 use App\Events\DriverAcceptedRide;
 use App\Events\DriverChangedEnd;
 use App\Events\DriverEndedRide;
+use App\Events\DriverPositionEvent;
 use App\Events\DriverStartedRide;
 use App\Events\RideRequested;
 use App\Http\Requests\AcceptRideRequest;
+use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
 use App\Http\Requests\StartRideRequest;
@@ -63,6 +65,12 @@ class RideService implements RideServiceInterface
         $updatedRide = $this->update($request, $ride);
         DriverAcceptedRide::dispatch($updatedRide);
         return $updatedRide;
+    }
+
+    public function dispatchDriverPosition(DriverPositionInfoRequest $request, string $driverId, Ride $ride): bool
+    {
+        DriverPositionEvent::dispatch($request->all(), $driverId, $ride);
+        return true;
     }
 
     public function startRide(StartRideRequest $request, Ride $ride): Ride
