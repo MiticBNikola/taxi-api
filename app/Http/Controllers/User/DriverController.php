@@ -27,7 +27,7 @@ class DriverController extends Controller
 
     public function show(Driver $driver): JsonResponse
     {
-        return response()->json($driver);
+        return response()->json($driver->load('vehicles', 'numbers'));
     }
 
     public function currentShift(): JsonResponse
