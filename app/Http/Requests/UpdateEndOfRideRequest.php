@@ -24,6 +24,8 @@ class UpdateEndOfRideRequest extends FormRequest
     {
         return [
             'end_location' => ['required', 'string'],
+            'end_lat' => ['required', 'numeric', 'between:-90,90'],
+            'end_lng' => ['required', 'numeric', 'between:-180,180'],
         ];
     }
 }

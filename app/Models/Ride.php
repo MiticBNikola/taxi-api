@@ -15,7 +15,11 @@ class Ride extends Model
     protected $fillable = [
         'request_time',
         'start_location',
+        'start_lat',
+        'start_lng',
         'end_location',
+        'end_lat',
+        'end_lng',
         'start_time',
         'end_time',
         'customer_id',

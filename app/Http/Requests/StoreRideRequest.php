@@ -24,7 +24,11 @@ class StoreRideRequest extends FormRequest
     {
         return [
             'start_location' => ['required', 'string'],
+            'start_lat' => ['required', 'numeric', 'between:-90,90'],
+            'start_lng' => ['required', 'numeric', 'between:-180,180'],
             'end_location' => ['sometimes', 'string'],
+            'end_lat' => ['sometimes', 'numeric', 'between:-90,90'],
+            'end_lng' => ['sometimes', 'numeric', 'between:-180,180'],
             'customer_id' => ['sometimes', 'numeric'],
             'request_time' => ['required', 'string'],
         ];
