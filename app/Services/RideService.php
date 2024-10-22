@@ -11,6 +11,7 @@ use App\Events\DriverPositionEvent;
 use App\Events\DriverStartedRide;
 use App\Events\RideRequested;
 use App\Http\Requests\AcceptRideRequest;
+use App\Http\Requests\CheckRideStatusRequest;
 use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
@@ -36,6 +37,24 @@ class RideService implements RideServiceInterface
         }
 //        $query->where('end_time', '!=', null);
         return $query->with('customer', 'driver')->paginate($filter['per_page'] ?? 10, ['*'], 'page', $filter['page'] ?? 1);
+    }
+
+    public function status(CheckRideStatusRequest $request): Ride|null
+    {
+        $rideID = $request->get('ride_id');
+        $userID = $request->get('user_id');
+        if (!$rideID && !$userID) {
+            return null;
+        }
+        $query = Ride::query();
+        if ($rideID) {
+            $query->where('id', '=', $rideID);
+        }
+        if ($userID) {
+            $query->where('customer_id', '=', $userID);
+        }
+        $query->where('end_time', '=', null);
+        return $query->get()->first() ?? null;
     }
 
     public function store(StoreRideRequest $request): Ride

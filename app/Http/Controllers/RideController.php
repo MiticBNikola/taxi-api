@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AcceptRideRequest;
+use App\Http\Requests\CheckRideStatusRequest;
 use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
@@ -30,6 +31,11 @@ class RideController extends Controller
     public function index(IndexRideRequest $request): JsonResponse
     {
         return response()->json($this->rideService->index($request));
+    }
+
+    public function checkStatus(CheckRideStatusRequest $request): JsonResponse
+    {
+        return response()->json($this->rideService->status($request));
     }
 
     /**

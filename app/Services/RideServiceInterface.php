@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\AcceptRideRequest;
+use App\Http\Requests\CheckRideStatusRequest;
 use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\EndRideRequest;
 use App\Http\Requests\IndexRideRequest;
@@ -15,6 +16,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface RideServiceInterface
 {
     public function index(IndexRideRequest $request): LengthAwarePaginator;
+
+    public function status(CheckRideStatusRequest $request): Ride|null;
 
     public function store(StoreRideRequest $request): Ride;
 

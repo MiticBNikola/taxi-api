@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('auth/check', [LoginController::class, 'authCheck']);
 Auth::routes();
 Route::prefix('ride')->group(function () {
+    Route::get('status', [RideController::class, 'checkStatus']);
     Route::post('', [RideController::class, 'makeRequest']);
     Route::delete('/{ride}/cancel', [RideController::class, 'cancelRide']);
     Route::put('/{ride}/customer-update-end', [RideController::class, 'customerUpdateEnd']);
