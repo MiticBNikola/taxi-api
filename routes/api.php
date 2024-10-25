@@ -41,6 +41,7 @@ Route::middleware( 'auth:sanctum')->group(function () {
     });
     Route::prefix('ride')->group(function () {
         Route::get('', [RideController::class, 'index']);
+        Route::get('requested', [RideController::class, 'requested']);
         Route::put('/{ride}/update-end', [RideController::class, 'updateEnd']);
         Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
         Route::post('/{ride}/driver/{driverId}/position', [RideController::class, 'driverPosition']);

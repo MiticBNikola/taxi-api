@@ -11,11 +11,14 @@ use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
 use App\Http\Requests\UpdateEndOfRideRequest;
 use App\Models\Ride;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface RideServiceInterface
 {
     public function index(IndexRideRequest $request): LengthAwarePaginator;
+
+    public function requested(): Collection;
 
     public function status(CheckRideStatusRequest $request): Ride|null;
 

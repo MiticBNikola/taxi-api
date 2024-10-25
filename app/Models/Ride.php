@@ -35,6 +35,10 @@ class Ride extends Model
         'request_time' => 'datetime',
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'start_lat' => 'float',
+        'start_lng' => 'float',
+        'end_lat' => 'float',
+        'end_lng' => 'float',
     ];
 
     public function customer(): BelongsTo

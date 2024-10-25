@@ -24,7 +24,8 @@ class CheckRideStatusRequest extends FormRequest
     {
         return [
             'ride_id' => ['sometimes', 'numeric'],
-            'user_id' => ['sometimes', 'numeric'],
+            'customer_id' => ['sometimes', 'numeric'],
+            'driver_id' => ['sometimes', 'required_without:customer_id', 'numeric'],
         ];
     }
 }

@@ -19,6 +19,7 @@ use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
 use App\Http\Requests\UpdateEndOfRideRequest;
 use App\Models\Ride;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class RideService implements RideServiceInterface
@@ -39,19 +40,31 @@ class RideService implements RideServiceInterface
         return $query->with('customer', 'driver')->paginate($filter['per_page'] ?? 10, ['*'], 'page', $filter['page'] ?? 1);
     }
 
+    public function requested(): Collection
+    {
+        $query = Ride::query();
+        $query->where('driver_id', '=', null);
+        $query->where('start_time', '=', null);
+        $query->where('end_time', '=', null);
+        return $query->get();
+    }
+
     public function status(CheckRideStatusRequest $request): Ride|null
     {
         $rideID = $request->get('ride_id');
-        $userID = $request->get('user_id');
-        if (!$rideID && !$userID) {
+        $customerID = $request->get('customer_id');
+        $driverID = $request->get('driver_id');
+        if (!$rideID && !$customerID) {
             return null;
         }
         $query = Ride::query();
         if ($rideID) {
             $query->where('id', '=', $rideID);
         }
-        if ($userID) {
-            $query->where('customer_id', '=', $userID);
+        if ($customerID) {
+            $query->where('customer_id', '=', $customerID);
+        } else if ($driverID) {
+            $query->where('driver_id', '=', $driverID);
         }
         $query->where('end_time', '=', null);
         return $query->get()->first() ?? null;

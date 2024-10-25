@@ -33,6 +33,11 @@ class RideController extends Controller
         return response()->json($this->rideService->index($request));
     }
 
+    public function requested(): JsonResponse
+    {
+        return response()->json($this->rideService->requested());
+    }
+
     public function checkStatus(CheckRideStatusRequest $request): JsonResponse
     {
         return response()->json($this->rideService->status($request));
