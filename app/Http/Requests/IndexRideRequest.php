@@ -25,6 +25,9 @@ class IndexRideRequest extends FormRequest
         return [
             'customer_id' => ['sometimes', 'numeric'],
             'driver_id' => ['sometimes', 'numeric'],
+            'requested' => ['prohibited_if:customer_id,driver_id', 'boolean'],
+            'search' => ['sometimes', 'prohibited_if:customer_id,driver_id', 'string'],
+            'in_progress' => ['prohibited_if:customer_id,driver_id', 'boolean'],
             'page' => ['required', 'numeric'],
             'per_page' => ['required', 'numeric'],
         ];

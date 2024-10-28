@@ -38,6 +38,11 @@ class RideController extends Controller
         return response()->json($this->rideService->requested());
     }
 
+    public function bestMonthDrivers(): JsonResponse
+    {
+        return response()->json($this->rideService->bestMonthDrivers());
+    }
+
     public function checkStatus(CheckRideStatusRequest $request): JsonResponse
     {
         return response()->json($this->rideService->status($request));

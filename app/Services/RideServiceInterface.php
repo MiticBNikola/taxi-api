@@ -22,6 +22,8 @@ interface RideServiceInterface
 
     public function status(CheckRideStatusRequest $request): Ride|null;
 
+    public function bestMonthDrivers(): Collection;
+
     public function store(StoreRideRequest $request): Ride;
 
     public function customerUpdateEnd(UpdateEndOfRideRequest $request, Ride $ride): Ride;

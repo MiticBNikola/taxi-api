@@ -19,6 +19,7 @@ use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
 use App\Http\Requests\UpdateEndOfRideRequest;
 use App\Models\Ride;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -29,14 +30,33 @@ class RideService implements RideServiceInterface
         $query = Ride::query();
         $filter = $request->all();
         if ($filter) {
-            if (isset($filter['customer_id'])) {
-                $query->where('customer_id', '=', $filter['customer_id']);
-            }
-            if (isset($filter['driver_id'])) {
-                $query->where('driver_id', '=', $filter['driver_id']);
+            if (isset($filter['customer_id']) || isset($filter['driver_id'])) {
+                if (isset($filter['customer_id'])) {
+                    $query->where('customer_id', '=', $filter['customer_id']);
+                }
+                if (isset($filter['driver_id'])) {
+                    $query->where('driver_id', '=', $filter['driver_id']);
+                }
+            } else {
+                if (!$filter['requested']) {
+                    $query->where('driver_id', '!=', null);
+                }
+                if (!$filter['in_progress']) {
+                    $query->where(function ($querySearch) use ($filter) {
+                        $querySearch->where('end_time', '!=', null);
+                        if ($filter['requested']) {
+                            $querySearch->orWhere('driver_id', '=', null);
+                        }
+                    });
+                }
+                if (isset($filter['search']) && $filter['search']) {
+                    $query->where(function ($querySearch) use ($filter) {
+                        $querySearch->where('start_location', 'LIKE', '%' . $filter['search'] . '%');
+                        $querySearch->orWhere('end_location', 'LIKE', '%' . $filter['search'] . '%');
+                    });
+                }
             }
         }
-//        $query->where('end_time', '!=', null);
         return $query->with('customer', 'driver')->paginate($filter['per_page'] ?? 10, ['*'], 'page', $filter['page'] ?? 1);
     }
 
@@ -68,6 +88,30 @@ class RideService implements RideServiceInterface
         }
         $query->where('end_time', '=', null);
         return $query->get()->first() ?? null;
+    }
+
+    public function bestMonthDrivers(): Collection
+    {
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        $maxTimesDriver = Ride::selectRaw('count(driver_id) as times')
+            ->where('driver_id', '!=', null)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('driver_id')
+            ->orderBy('times', 'desc')
+            ->pluck('times')
+            ->first() ?? 0;
+        return Ride::select('driver_id')
+            ->selectRaw('count(driver_id) as times')
+            ->where('driver_id', '!=', null)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('driver_id')
+            ->having('times', '=', $maxTimesDriver)
+            ->with('driver')
+            ->get();
     }
 
     public function store(StoreRideRequest $request): Ride
