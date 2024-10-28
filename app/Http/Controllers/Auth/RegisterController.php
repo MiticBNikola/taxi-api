@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User\Customer;
 use App\Models\User\Driver;
+use App\Models\User\Manager;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -92,7 +93,7 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . $data['type'] . 's'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'type' => ['required', 'string', Rule::in(['customer', 'driver'])],
+            'type' => ['required', 'string', Rule::in(['customer', 'driver', 'manger'])],
             'driving_license_category' => [Rule::requiredIf($data['type'] === 'driver'), 'string', Rule::in(['B', 'BE'])],
             'driving_license_number' => [Rule::requiredIf($data['type'] === 'driver'), 'numeric']
         ]);
@@ -123,7 +124,7 @@ class RegisterController extends Controller
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
             ]);
-        } else {
+        } else if ($data['type'] == 'driver') {
             return Driver::create([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
@@ -131,6 +132,13 @@ class RegisterController extends Controller
                 'password' => Hash::make($data['password']),
                 'driving_license_category' => $data['driving_license_category'],
                 'driving_license_number' => $data['driving_license_number'],
+            ]);
+        } else {
+            return Manager::create([
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
             ]);
         }
     }

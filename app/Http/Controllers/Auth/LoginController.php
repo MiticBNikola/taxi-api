@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User\Customer;
 use App\Models\User\Driver;
+use App\Models\User\Manager;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -90,6 +91,10 @@ class LoginController extends Controller
         if (!$user) {
             $user = Driver::where('email', $credentials['email'])->first();
             $type = 'driver';
+        }
+        if (!$user) {
+            $user = Manager::where('email', $credentials['email'])->first();
+            $type = 'manager';
         }
         if ($user && Hash::check($credentials['password'], $user->password)) {
             $user->tokens()->delete();

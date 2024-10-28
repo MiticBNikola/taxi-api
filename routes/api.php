@@ -5,6 +5,7 @@ use App\Http\Controllers\RideController;
 use App\Http\Controllers\SteerController;
 use App\Http\Controllers\User\CustomerController;
 use App\Http\Controllers\User\DriverController;
+use App\Http\Controllers\User\ManagerController;
 use App\Http\Controllers\Vehicle\VehicleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,9 +40,11 @@ Route::middleware( 'auth:sanctum')->group(function () {
         Route::get('/available', [DriverController::class, 'available']);
         Route::get('/in-drive', [DriverController::class, 'inDrive']);
     });
+    Route::resource('manager', ManagerController::class)->only(['show', 'destroy']);
     Route::prefix('ride')->group(function () {
         Route::get('', [RideController::class, 'index']);
         Route::get('requested', [RideController::class, 'requested']);
+        Route::get('best-month-drivers', [RideController::class, 'bestMonthDrivers'])->middleware(['auth:manager']);
         Route::put('/{ride}/update-end', [RideController::class, 'updateEnd']);
         Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
         Route::post('/{ride}/driver/{driverId}/position', [RideController::class, 'driverPosition']);

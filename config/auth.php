@@ -48,6 +48,10 @@ return [
             'driver' => 'sanctum',
             'provider' => 'drivers',
         ],
+        'manager' => [
+            'driver' => 'sanctum',
+            'provider' => 'managers',
+        ],
     ],
 
     /*
@@ -81,6 +85,11 @@ return [
         'drivers' => [
             'driver' => 'eloquent',
             'model' => App\Models\User\Driver::class,
+        ],
+
+        'managers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User\Manager::class,
         ],
 
         // 'users' => [

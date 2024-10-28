@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Steer;
 use App\Models\User\Customer;
 use App\Models\User\Driver;
+use App\Models\User\Manager;
 use App\Models\Vehicle\Vehicle;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Manager::factory(10)->create();
         $drivers = Driver::factory(10)->create();
         Customer::factory(10)->create();
         $vehicles = Vehicle::factory(10)->create();
