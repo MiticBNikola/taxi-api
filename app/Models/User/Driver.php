@@ -46,6 +46,14 @@ class Driver extends User
             ->withTimestamps();
     }
 
+    public function currentVehicles(): BelongsToMany
+    {
+        return $this->belongsToMany(Vehicle::class, 'steers')
+            ->using(Steer::class)
+            ->as('steer')
+            ->wherePivotNull('date_to');
+    }
+
     public function getHasVehicleAttribute(): bool
     {
         return $this->vehicles()->wherePivotNull('date_to')->exists();

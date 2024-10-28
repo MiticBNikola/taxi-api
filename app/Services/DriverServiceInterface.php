@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use App\Http\Requests\IndexDriverRequest;
 use App\Http\Requests\UpdateDriverRequest;
 use App\Models\User\Driver;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface DriverServiceInterface
 {
-    public function index(): Collection;
+    public function index(IndexDriverRequest $request): LengthAwarePaginator;
 
     public function currentShift(): Collection;
 

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\IndexDriverRequest;
 use App\Http\Requests\UpdateDriverRequest;
 use App\Models\User\Driver;
 use App\Services\DriverServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class DriverController extends Controller
 {
@@ -20,9 +20,9 @@ class DriverController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(IndexDriverRequest $request): JsonResponse
     {
-        return response()->json($this->driverService->index());
+        return response()->json($this->driverService->index($request));
     }
 
     public function show(Driver $driver): JsonResponse

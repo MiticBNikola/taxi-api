@@ -2,16 +2,31 @@
 
 namespace App\Services;
 
+use App\Http\Requests\IndexDriverRequest;
 use App\Http\Requests\UpdateDriverRequest;
 use App\Models\User\Driver;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 class DriverService implements DriverServiceInterface
 {
-    public function index(): Collection
+    public function index(IndexDriverRequest $request): LengthAwarePaginator
     {
-        return Driver::all()->load('numbers');
+        $query = Driver::query();
+        $filter = $request->all();
+        if ($filter) {
+            if ($filter['active']) {
+                $query->where('is_active', '=', true);
+            }
+            if (isset($filter['search']) && $filter['search']) {
+                $query->where(function ($querySearch) use ($filter) {
+                    $querySearch->where('first_name', 'LIKE', '%' . $filter['search'] . '%');
+                    $querySearch->orWhere('last_name', 'LIKE', '%' . $filter['search'] . '%');
+                });
+            }
+        }
+        return $query->with('numbers', 'currentVehicles')->paginate($filter['per_page'] ?? 10, ['*'], 'page', $filter['page'] ?? 1);
     }
 
     public function currentShift(): Collection
