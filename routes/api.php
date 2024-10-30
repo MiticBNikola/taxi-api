@@ -36,6 +36,7 @@ Route::middleware( 'auth:sanctum')->group(function () {
     });
     Route::resource('driver', DriverController::class)->only(['index', 'show', 'update', 'destroy']);
     Route::prefix('driver')->group(function () {
+        Route::post('/{driver}/possible-ride/{rideId}/position', [DriverController::class, 'storeDriverCurrentLocation']);
         Route::get('/current-shift', [DriverController::class, 'currentShift']);
         Route::get('/available', [DriverController::class, 'available']);
         Route::get('/in-drive', [DriverController::class, 'inDrive']);
@@ -43,7 +44,7 @@ Route::middleware( 'auth:sanctum')->group(function () {
     Route::resource('manager', ManagerController::class)->only(['show', 'destroy']);
     Route::prefix('ride')->group(function () {
         Route::get('', [RideController::class, 'index']);
-        Route::get('requested', [RideController::class, 'requested']);
+        Route::get('requested/driver/{driver}', [RideController::class, 'requestedRides']);
         Route::get('best-month-drivers', [RideController::class, 'bestMonthDrivers'])->middleware(['auth:manager']);
         Route::put('/{ride}/update-end', [RideController::class, 'updateEnd']);
         Route::put('/{ride}/accept', [RideController::class, 'acceptRide']);
