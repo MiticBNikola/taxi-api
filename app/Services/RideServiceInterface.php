@@ -18,7 +18,7 @@ interface RideServiceInterface
 {
     public function index(IndexRideRequest $request): LengthAwarePaginator;
 
-    public function requested(): Collection;
+    public function requestedRides(int $driver_id): Collection;
 
     public function status(CheckRideStatusRequest $request): Ride|null;
 

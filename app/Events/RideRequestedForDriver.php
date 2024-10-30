@@ -2,26 +2,27 @@
 
 namespace App\Events;
 
+use App\Models\Ride;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CustomerCanceledRide implements ShouldBroadcast
+class RideRequestedForDriver implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public int $ride_id;
-    public int|null $driver_id;
+    public Ride $ride;
+    public int $driverId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(int $ride_id, int|null $driver_id)
+    public function __construct(int $driverId, Ride $ride)
     {
-        $this->ride_id = $ride_id;
-        $this->driver_id = $driver_id;
+        $this->ride = $ride;
+        $this->driverId = $driverId;
     }
 
     /**
@@ -31,19 +32,16 @@ class CustomerCanceledRide implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        if ($this->driver_id) {
-            return new Channel('drivers.' . $this->driver_id);
-        }
-        return new Channel('drivers');
+        return new Channel('drivers.' . $this->driverId);
     }
 
     public function broadcastAs(): string
     {
-        return 'ride-canceled';
+        return 'ride-requested';
     }
 
     public function broadcastWith(): array
     {
-        return ['ride_id' => $this->ride_id];
+        return ['ride' => $this->ride];
     }
 }

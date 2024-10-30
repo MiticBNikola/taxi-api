@@ -9,7 +9,7 @@ use App\Events\DriverChangedEnd;
 use App\Events\DriverEndedRide;
 use App\Events\DriverPositionEvent;
 use App\Events\DriverStartedRide;
-use App\Events\RideRequested;
+use App\Events\RequestDriversLocation;
 use App\Http\Requests\AcceptRideRequest;
 use App\Http\Requests\CheckRideStatusRequest;
 use App\Http\Requests\DriverPositionInfoRequest;
@@ -22,6 +22,7 @@ use App\Models\Ride;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Redis;
 
 class RideService implements RideServiceInterface
 {
@@ -60,13 +61,26 @@ class RideService implements RideServiceInterface
         return $query->with('customer', 'driver')->paginate($filter['per_page'] ?? 10, ['*'], 'page', $filter['page'] ?? 1);
     }
 
-    public function requested(): Collection
+    public function requestedRides(int $driver_id): Collection
     {
         $query = Ride::query();
         $query->where('driver_id', '=', null);
         $query->where('start_time', '=', null);
         $query->where('end_time', '=', null);
-        return $query->get();
+        $allRides = $query->get();
+        foreach ($allRides as $index => $ride) {
+            if ($ride->created_at > Carbon::now()->subSeconds(65)) {
+                $key = "ride:$ride->id:driver";
+                if (!Redis::exists($key) ||
+                    (Redis::exists($key) && Redis::get($key) !== 'all' && Redis::get($key) !== (string)$driver_id)
+                ) {
+                    $allRides->forget($index);
+                }
+            }
+        }
+//        $query->where('created_at', '<', Carbon::now()->subSeconds(90));
+
+        return $allRides;
     }
 
     public function status(CheckRideStatusRequest $request): Ride|null
@@ -118,7 +132,7 @@ class RideService implements RideServiceInterface
     {
         $ride = Ride::create($request->all());
         $ride->refresh();
-        RideRequested::dispatch($ride);
+        RequestDriversLocation::dispatch($ride);
         return $ride;
     }
 
@@ -139,6 +153,11 @@ class RideService implements RideServiceInterface
     public function acceptRide(AcceptRideRequest $request, Ride $ride): Ride
     {
         $updatedRide = $this->update($request, $ride);
+        $redisRideKeyPattern = "ride:$ride->id:driver*";
+        $redisRideKeys = Redis::keys($redisRideKeyPattern);
+        if (!empty($redisRideKeys)) {
+            Redis::del($redisRideKeys);
+        }
         DriverAcceptedRide::dispatch($updatedRide);
         return $updatedRide;
     }
@@ -171,7 +190,14 @@ class RideService implements RideServiceInterface
 
     public function cancelRide(Ride $ride): bool
     {
-        CustomerCanceledRide::dispatch($ride);
+        $ride_id = $ride['id'];
+        $driver_id = $ride['driver_id'];
+        $redisRideKeyPattern = "ride:$ride_id:driver*";
+        $redisRideKeys = Redis::keys($redisRideKeyPattern);
+        if (!empty($redisRideKeys)) {
+            Redis::del($redisRideKeys);
+        }
+        CustomerCanceledRide::dispatch($ride_id, $driver_id);
         return $this->destroy($ride);
     }
 

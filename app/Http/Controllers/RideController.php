@@ -11,6 +11,7 @@ use App\Http\Requests\StartRideRequest;
 use App\Http\Requests\StoreRideRequest;
 use App\Http\Requests\UpdateEndOfRideRequest;
 use App\Models\Ride;
+use App\Models\User\Driver;
 use App\Services\RideServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -33,9 +34,9 @@ class RideController extends Controller
         return response()->json($this->rideService->index($request));
     }
 
-    public function requested(): JsonResponse
+    public function requestedRides(Driver $driver): JsonResponse
     {
-        return response()->json($this->rideService->requested());
+        return response()->json($this->rideService->requestedRides($driver->id));
     }
 
     public function bestMonthDrivers(): JsonResponse

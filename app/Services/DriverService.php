@@ -2,12 +2,16 @@
 
 namespace App\Services;
 
+use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\IndexDriverRequest;
 use App\Http\Requests\UpdateDriverRequest;
+use App\Models\Ride;
 use App\Models\User\Driver;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redis;
 
 class DriverService implements DriverServiceInterface
 {
@@ -47,6 +51,19 @@ class DriverService implements DriverServiceInterface
         return Driver::where('is_active', '=', true)
             ->whereRelation('rides', 'end_time', '=', null)
             ->get()->load('numbers');
+    }
+
+    public function storeDriverPosition(DriverPositionInfoRequest $request, Driver $driver, string $rideId): bool
+    {
+        $ride = Ride::findOrFail($rideId);
+        $timeDifference = Carbon::now()->diffInSeconds($ride->created_at);
+        // Probably do not need timeDifference here at all
+        if (!$ride->driver_id && $timeDifference <= 10) {
+            $redisKey = "ride:$rideId:driver-location";
+            Redis::sadd($redisKey, json_encode(['lat' => $request->get('lat'), 'lng' => $request->get('lng'), 'driver_id' => $driver->id]));
+            return true;
+        }
+        return false;
     }
 
     public function update(UpdateDriverRequest $request, Driver $driver): Driver

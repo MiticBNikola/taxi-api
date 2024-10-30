@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\RequestDriversLocation;
+use App\Events\RideRequestedForDriver;
+use App\Listeners\ProcessDriverAcceptance;
+use App\Listeners\ProcessDriversLocation;
 use App\Listeners\UpdateDriverActivity;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -26,6 +30,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         Logout::class => [
             UpdateDriverActivity::class
+        ],
+        RequestDriversLocation::class => [
+            ProcessDriversLocation::class
+        ],
+        RideRequestedForDriver::class => [
+            ProcessDriverAcceptance::class
         ]
     ];
 

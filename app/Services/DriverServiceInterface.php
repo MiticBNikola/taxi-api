@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\IndexDriverRequest;
 use App\Http\Requests\UpdateDriverRequest;
 use App\Models\User\Driver;
@@ -17,6 +18,8 @@ interface DriverServiceInterface
     public function available(): Collection;
 
     public function inDrive(): Collection;
+
+    public function storeDriverPosition(DriverPositionInfoRequest $request, Driver $driver, string $rideId): bool;
 
     public function update(UpdateDriverRequest $request, Driver $driver): Driver;
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DriverPositionInfoRequest;
 use App\Http\Requests\IndexDriverRequest;
 use App\Http\Requests\UpdateDriverRequest;
 use App\Models\User\Driver;
@@ -28,6 +29,11 @@ class DriverController extends Controller
     public function show(Driver $driver): JsonResponse
     {
         return response()->json($driver->load('vehicles', 'numbers'));
+    }
+
+    public function storeDriverCurrentLocation(DriverPositionInfoRequest $request, Driver $driver, string $rideId): JsonResponse
+    {
+        return response()->json($this->driverService->storeDriverPosition($request, $driver, $rideId));
     }
 
     public function currentShift(): JsonResponse
