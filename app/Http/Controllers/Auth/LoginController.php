@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User\Customer;
 use App\Models\User\Driver;
 use App\Models\User\Manager;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -102,6 +104,7 @@ class LoginController extends Controller
             $tokenRecord = PersonalAccessToken::find($token->accessToken->id);
             $tokenRecord->expires_at = now()->addHours(2);
             $tokenRecord->save();
+            event(new Login($type, $user, false));
             return ["user" => $user, "token" => $token->plainTextToken, "type" => $type];
         }
         return null;
@@ -175,6 +178,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         $type = $request->get('type', 'web');
+        $user = auth()->guard($type)->user();
         if (auth()->guard($type)->check()) {
             auth()->guard($type)->user()->tokens()->delete();
         }
@@ -183,6 +187,7 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
+        event(new Logout('web', $user));
         if ($response = $this->loggedOut($request)) {
             return $response;
         }
