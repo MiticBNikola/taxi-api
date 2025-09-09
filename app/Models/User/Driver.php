@@ -26,6 +26,7 @@ class Driver extends User
         $this->mergeFillable([
             'driving_license_category',
             'driving_license_number',
+            'is_active',
         ]);
         $this->mergeCasts([
             'is_active' => 'boolean',
